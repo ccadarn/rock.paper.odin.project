@@ -1,0 +1,83 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* Night mode styles */
+body.night-mode {
+    background-color: #333;
+    color: #f0f0f0;
+}
+
+/* Main heading style */
+h1 {
+    margin-top: 20px;
+}
+
+/* Container for buttons */
+#buttons {
+    margin-top: 20px;
+}
+
+/* Style for player choice buttons */
+#buttons button, #controls button {
+    margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+}
+
+#buttons button:hover, #controls button:hover {
+    background-color: #45a049;
+}
+
+/* Container for results */
+#results {
+    margin-top: 20px;
+}
+
+/* Style for the result message */
+#result-message {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Style for the scores */
+#human-score, #computer-score {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Container for history */
+#history {
+    margin-top: 20px;
+}
+
+/* Style for the history list */
+#history-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Style for the history items */
+#history-list li {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Container for control buttons */
+#controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
