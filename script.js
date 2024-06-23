@@ -1,84 +1,103 @@
-/*
-Project found on OdinProject to test what I have learned. 
-This particular project is aimed to creating a 'Rock, Paper, Scissors' project to play against computer
-*/
+// Initialize scores for human and computer
+let humanScore = 0;
+let computerScore = 0;
+let gameOver = false;
 
-// Function to get the computer choice
-let getComputerChoice = () => {
-    let random = Math.floor(Math.random() * 3);
-    if(random === 0){
-        return 'Rock';
-    } else if (random === 1){
-        return 'Paper';
-    } else {
-        return 'Scissors';
-    }
+// Function to get a random choice for the computer
+const getComputerChoice = () => {
+    const choices = ['Rock', 'Paper', 'Scissors'];
+    const randomIndex = Math.floor(Math.random() * 3);
+    return choices[randomIndex];
 }
 
-// Function to get the human choice
-let getHumanChoice = () => {
-    let userInput = prompt('Rock, Paper, or Scissors?');
-    userInput = userInput.toLowerCase();
+// Function to play a single round and determine the result
+const playRound = (humanChoice) => {
+    if (gameOver) return;
 
-    if (userInput === "rock") {
-        return 'Rock';
-    } else if (userInput === "paper") {
-        return 'Paper';
-    } else if (userInput === "scissors") {
-        return 'Scissors';
-    } else {
-        return 'Invalid choice, please enter Rock, Paper, or Scissors.';
-    }
-}
+    const computerChoice = getComputerChoice();
 
-// Function to play a single round
-let playRound = (computerChoice, humanChoice) => {
-    if (humanChoice === 'Invalid choice, please enter Rock, Paper, or Scissors.') {
-        return humanChoice;
-    }
+    let resultMessage = '';
 
     if (computerChoice === humanChoice) {
-        return `It's a DRAW, you both chose ${computerChoice}!`;
+        resultMessage = `It's a DRAW, you both chose ${computerChoice}!`;
     } else if (
         (computerChoice === 'Rock' && humanChoice === 'Scissors') ||
         (computerChoice === 'Paper' && humanChoice === 'Rock') ||
         (computerChoice === 'Scissors' && humanChoice === 'Paper')
     ) {
-        return `You LOSE, ${computerChoice} beats ${humanChoice}!`;
+        computerScore++;
+        resultMessage = `You LOSE, ${computerChoice} beats ${humanChoice}!`;
     } else {
-        return `You WIN, ${humanChoice} beats ${computerChoice}!`;
+        humanScore++;
+        resultMessage = `You WIN, ${humanChoice} beats ${computerChoice}!`;
+    }
+
+    // Update the history display
+    updateHistory(humanChoice, computerChoice, resultMessage);
+
+    // Return the result message
+    return resultMessage;
+}
+
+// Function to update the results and scores in the DOM
+const updateResults = (message) => {
+    document.querySelector('#result-message').innerText = message;
+    document.querySelector('#human-score').innerText = humanScore;
+    document.querySelector('#computer-score').innerText = computerScore;
+
+    // Check if either player has reached 5 points
+    if (humanScore === 5) {
+        document.querySelector('#result-message').innerText += ' Congratulations, you won the game!';
+        gameOver = true;
+    } else if (computerScore === 5) {
+        document.querySelector('#result-message').innerText += ' Sorry, you lost the game. Better luck next time!';
+        gameOver = true;
     }
 }
 
-// Function to play the entire game
-let playGame = () => {
-    let humanScore = 0;
-    let computerScore = 0;
-
-    for (let i = 0; i < 5; i++) {
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        
-        const result = playRound(computerSelection, humanSelection);
-        console.log(result);
-
-        if (result.includes('WIN')) {
-            humanScore++;
-        } else if (result.includes('LOSE')) {
-            computerScore++;
-        }
-    }
-
-    console.log(`Final Scores: Human - ${humanScore}, Computer - ${computerScore}`);
-
-    if (humanScore > computerScore) {
-        console.log('Congratulations, you won the game!');
-    } else if (computerScore > humanScore) {
-        console.log('Sorry, you lost the game. Better luck next time!');
-    } else {
-        console.log('The game is a draw!');
-    }
+// Function to update the history display in the DOM
+const updateHistory = (humanChoice, computerChoice, resultMessage) => {
+    const historyList = document.querySelector('#history-list');
+    const historyItem = document.createElement('li');
+    historyItem.innerText = `Human: ${humanChoice}, Computer: ${computerChoice} - ${resultMessage}`;
+    historyList.appendChild(historyItem);
 }
 
-// Start the game
-playGame();
+// Function to reset the game scores and update the DOM
+const resetGame = () => {
+    humanScore = 0;
+    computerScore = 0;
+    gameOver = false;
+    document.querySelector('#history-list').innerHTML = ''; // Clear the history
+    updateResults('Game reset. Start playing again!');
+}
+
+// Function to toggle night mode
+const toggleNightMode = () => {
+    document.body.classList.toggle('night-mode');
+}
+
+// Add event listeners to the buttons for user interaction
+document.querySelector('#rock').addEventListener('click', () => {
+    if (gameOver) return;
+    const result = playRound('Rock');
+    updateResults(result);
+});
+
+document.querySelector('#paper').addEventListener('click', () => {
+    if (gameOver) return;
+    const result = playRound('Paper');
+    updateResults(result);
+});
+
+document.querySelector('#scissors').addEventListener('click', () => {
+    if (gameOver) return;
+    const result = playRound('Scissors');
+    updateResults(result);
+});
+
+// Add event listener to the night mode toggle button
+document.querySelector('#night-mode-toggle').addEventListener('click', toggleNightMode);
+
+// Add event listener to the restart game button
+document.querySelector('#restart-game').addEventListener('click', resetGame);
